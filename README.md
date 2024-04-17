@@ -63,6 +63,10 @@ Extend your Prisma Client:
 import prismaKysely from "prisma-extension-kysely2";
 import type { DB } from "./prisma/generated/types";
 
+// Default with types
+const prisma = new PrismaClient().$extends(prismaKysely<DB>());
+
+// Custom dialect,plugins,options
 const prisma = new PrismaClient().$extends(
   prismaKysely({
     kysely: (driver) =>
@@ -130,14 +134,6 @@ await prisma.$kysely.transaction().execute(async (trx) => {});
 ## Plugins
 
 Do you love Kysely's plugins? So do we! You can use them with `prisma-extension-kysely2` as well:
-
-Use default prisma dialect
-
-```typescript
-const prisma = new PrismaClient().$extends(prismaKysely<DB>());
-```
-
-Or custom dialect and options
 
 ```typescript
 const prisma = new PrismaClient().$extends(
