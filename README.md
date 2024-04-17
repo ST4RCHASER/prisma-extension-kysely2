@@ -6,11 +6,11 @@ My target just want to use native kysely transaction and extend client without a
 
 [![npm version](https://badge.fury.io/js/prisma-extension-kysely2.svg)](https://badge.fury.io/js/prisma-extension-kysely2)
 [![npm downloads](https://img.shields.io/npm/dm/prisma-extension-kysely2.svg)](https://www.npmjs.com/package/prisma-extension-kysely2)
-[![GitHub license](https://img.shields.io/github/license/eoin-obrien/prisma-extension-kysely2.svg)](https://www.npmjs.com/package/prisma-extension-kysely2)
-[![Node.js CI](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/ci.yml/badge.svg)](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/ci.yml)
-[![Node.js Package](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/npm-publish.yml)
-[![codecov](https://codecov.io/gh/eoin-obrien/prisma-extension-kysely2/graph/badge.svg?token=C18C7BGISJ)](https://codecov.io/gh/eoin-obrien/prisma-extension-kysely2)
-[![Maintainability](https://api.codeclimate.com/v1/badges/241b8b2b35abafc8af6e/maintainability)](https://codeclimate.com/github/eoin-obrien/prisma-extension-kysely2/maintainability)
+[![GitHub license](https://img.shields.io/github/license/ST4RCHASER/prisma-extension-kysely2.svg)](https://www.npmjs.com/package/prisma-extension-kysely2)
+[![Node.js CI](https://github.com/ST4RCHASER/prisma-extension-kysely2/actions/workflows/ci.yml/badge.svg)](https://github.com/ST4RCHASER/prisma-extension-kysely2/actions/workflows/ci.yml)
+[![Node.js Package](https://github.com/ST4RCHASER/prisma-extension-kysely2/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/ST4RCHASER/prisma-extension-kysely2/actions/workflows/npm-publish.yml)
+[![codecov](https://codecov.io/gh/ST4RCHASER/prisma-extension-kysely2/graph/badge.svg?token=C18C7BGISJ)](https://codecov.io/gh/ST4RCHASER/prisma-extension-kysely2)
+[![Maintainability](https://api.codeclimate.com/v1/badges/241b8b2b35abafc8af6e/maintainability)](https://codeclimate.com/github/ST4RCHASER/prisma-extension-kysely2/maintainability)
 
 Writing and maintaining raw SQL queries for Prisma can be a tedious and error-prone task. The moment you need to write a query that is not supported out-of-the-box by Prisma, you lose all of that type-safety and autocompletion. This is where `prisma-extension-kysely2` comes in! It allows you to easily write raw SQL queries in a type-safe manner with [`kysely`](https://kysely.dev/) and integrate them seamlessly with Prisma.
 
