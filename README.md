@@ -1,16 +1,16 @@
 # Prisma Kysely Extension
 
-[![npm version](https://badge.fury.io/js/prisma-extension-kysely.svg)](https://badge.fury.io/js/prisma-extension-kysely)
-[![npm downloads](https://img.shields.io/npm/dm/prisma-extension-kysely.svg)](https://www.npmjs.com/package/prisma-extension-kysely)
-[![GitHub license](https://img.shields.io/github/license/eoin-obrien/prisma-extension-kysely.svg)](https://www.npmjs.com/package/prisma-extension-kysely)
-[![Node.js CI](https://github.com/eoin-obrien/prisma-extension-kysely/actions/workflows/ci.yml/badge.svg)](https://github.com/eoin-obrien/prisma-extension-kysely/actions/workflows/ci.yml)
-[![Node.js Package](https://github.com/eoin-obrien/prisma-extension-kysely/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/eoin-obrien/prisma-extension-kysely/actions/workflows/npm-publish.yml)
-[![codecov](https://codecov.io/gh/eoin-obrien/prisma-extension-kysely/graph/badge.svg?token=C18C7BGISJ)](https://codecov.io/gh/eoin-obrien/prisma-extension-kysely)
-[![Maintainability](https://api.codeclimate.com/v1/badges/241b8b2b35abafc8af6e/maintainability)](https://codeclimate.com/github/eoin-obrien/prisma-extension-kysely/maintainability)
+[![npm version](https://badge.fury.io/js/prisma-extension-kysely2.svg)](https://badge.fury.io/js/prisma-extension-kysely2)
+[![npm downloads](https://img.shields.io/npm/dm/prisma-extension-kysely2.svg)](https://www.npmjs.com/package/prisma-extension-kysely2)
+[![GitHub license](https://img.shields.io/github/license/eoin-obrien/prisma-extension-kysely2.svg)](https://www.npmjs.com/package/prisma-extension-kysely2)
+[![Node.js CI](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/ci.yml/badge.svg)](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/ci.yml)
+[![Node.js Package](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/npm-publish.yml/badge.svg)](https://github.com/eoin-obrien/prisma-extension-kysely2/actions/workflows/npm-publish.yml)
+[![codecov](https://codecov.io/gh/eoin-obrien/prisma-extension-kysely2/graph/badge.svg?token=C18C7BGISJ)](https://codecov.io/gh/eoin-obrien/prisma-extension-kysely2)
+[![Maintainability](https://api.codeclimate.com/v1/badges/241b8b2b35abafc8af6e/maintainability)](https://codeclimate.com/github/eoin-obrien/prisma-extension-kysely2/maintainability)
 
-Writing and maintaining raw SQL queries for Prisma can be a tedious and error-prone task. The moment you need to write a query that is not supported out-of-the-box by Prisma, you lose all of that type-safety and autocompletion. This is where `prisma-extension-kysely` comes in! It allows you to easily write raw SQL queries in a type-safe manner with [`kysely`](https://kysely.dev/) and integrate them seamlessly with Prisma.
+Writing and maintaining raw SQL queries for Prisma can be a tedious and error-prone task. The moment you need to write a query that is not supported out-of-the-box by Prisma, you lose all of that type-safety and autocompletion. This is where `prisma-extension-kysely2` comes in! It allows you to easily write raw SQL queries in a type-safe manner with [`kysely`](https://kysely.dev/) and integrate them seamlessly with Prisma.
 
-And the best part? You can use all of your favorite [`kysely`](https://kysely.dev/) plugins with `prisma-extension-kysely` too!
+And the best part? You can use all of your favorite [`kysely`](https://kysely.dev/) plugins with `prisma-extension-kysely2` too!
 
 You don't have to take our word for it, though:
 
@@ -34,7 +34,7 @@ Click the **Use this template** button and provide details for your Client exten
 Install the dependencies:
 
 ```shell
-npm install prisma-extension-kysely kysely
+npm install prisma-extension-kysely2 kysely
 ```
 
 Set up the excellent [`prisma-kysely`](https://www.npmjs.com/package/prisma-kysely) library to automatically generate types for your database:
@@ -60,11 +60,11 @@ npx prisma generate
 Extend your Prisma Client:
 
 ```typescript
-import kyselyExtension from "prisma-extension-kysely";
+import prismaKysely from "prisma-extension-kysely2";
 import type { DB } from "./prisma/generated/types";
 
 const prisma = new PrismaClient().$extends(
-  kyselyExtension({
+  prismaKysely({
     kysely: (driver) =>
       new Kysely<DB>({
         dialect: {
@@ -104,7 +104,7 @@ await prisma.$kysely.deleteFrom("User").where("id", "=", id).execute();
 
 ## Transactions
 
-Prisma's interactive transactions are fully supported by `prisma-extension-kysely`! Just remeber to use `tx.$kysely` instead of `prisma.$kysely`, and you're good to go:
+Prisma's interactive transactions are fully supported by `prisma-extension-kysely2`! Just remeber to use `tx.$kysely` instead of `prisma.$kysely`, and you're good to go:
 
 ```typescript
 await prisma.$transaction(async (tx) => {
@@ -120,7 +120,7 @@ await prisma.$transaction(async (tx) => {
 });
 ```
 
-Don't try to use Kysely's `transaction` method directly, though. It's not supported by `prisma-extension-kysely`, and it will throw an error if you try to use it.
+Don't try to use Kysely's `transaction` method directly, though. It's not supported by `prisma-extension-kysely2`, and it will throw an error if you try to use it.
 
 ```typescript
 // Don't do this! Prefer prisma.$transaction instead.
@@ -129,22 +129,27 @@ await prisma.$kysely.transaction().execute(async (trx) => {});
 
 ## Plugins
 
-Do you love Kysely's plugins? So do we! You can use them with `prisma-extension-kysely` as well:
+Do you love Kysely's plugins? So do we! You can use them with `prisma-extension-kysely2` as well:
+
+Use default prisma dialect
+
+```typescript
+const prisma = new PrismaClient().$extends(prismaKysely<DB>());
+```
+
+Or custom dialect and options
 
 ```typescript
 const prisma = new PrismaClient().$extends(
-  kyselyExtension({
-    kysely: (driver) =>
-      new Kysely<DB>({
-        dialect: {
-          createDriver: () => driver,
-          createAdapter: () => new PostgresAdapter(),
-          createIntrospector: (db) => new PostgresIntrospector(db),
-          createQueryCompiler: () => new PostgresQueryCompiler(),
-        },
-        // Use your favorite plugins!
-        plugins: [new CamelCasePlugin()],
-      }),
+  prismaKysely<DB>({
+    dialect: {
+      createDriver: () => driver,
+      createAdapter: () => new PostgresAdapter(),
+      createIntrospector: (db) => new PostgresIntrospector(db),
+      createQueryCompiler: () => new PostgresQueryCompiler(),
+    },
+    // Use your favorite plugins!
+    plugins: [new CamelCasePlugin()],
   }),
 );
 ```
