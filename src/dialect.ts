@@ -9,7 +9,7 @@ import {
   PostgresQueryCompiler,
   QueryCompiler,
 } from "kysely";
-import { PrismaDriver } from "./driver";
+import { PrismaDriver } from "./driver.js";
 
 export class PrismaDialect<T extends PrismaClient> implements Dialect {
   private readonly prisma;

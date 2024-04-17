@@ -9,7 +9,7 @@ import {
   TransactionSettings,
   UpdateQueryNode,
 } from "kysely";
-import { PrismaTransactionLocker } from "./locker";
+import { PrismaTransactionLocker } from "./locker.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const IsolationLevels = {

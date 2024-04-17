@@ -1,4 +1,8 @@
-# Prisma Kysely Extension
+# Prisma Kysely Extension 2
+
+## This is forked version of — [prisma-extension-kysely](https://github.com/eoin-obrien/prisma-extension-kysely)
+
+My target just want to use native kysely transaction and extend client without any args
 
 [![npm version](https://badge.fury.io/js/prisma-extension-kysely2.svg)](https://badge.fury.io/js/prisma-extension-kysely2)
 [![npm downloads](https://img.shields.io/npm/dm/prisma-extension-kysely2.svg)](https://www.npmjs.com/package/prisma-extension-kysely2)

@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client/extension";
 import { Dialect, Kysely, KyselyConfig, KyselyPlugin, LogConfig } from "kysely";
 
-import { PrismaDialect } from "./dialect";
+import { PrismaDialect } from "./dialect.js";
 
 interface KyselyConfigLike {
   dialect?: Dialect;
