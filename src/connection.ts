@@ -52,9 +52,8 @@ export class PrismaConnection implements DatabaseConnection {
 
     return {
       rows: results as unknown as O[],
-      // @ts-expect-error replaces `QueryResult.numUpdatedOrDeletedRows` in kysely > 0.22
       // following https://github.com/koskimas/kysely/pull/188
-      numAffectedRows,
+      numAffectedRows: BigInt(numAffectedRows),
       // deprecated in kysely > 0.22, keep for backward compatibility.
       numUpdatedOrDeletedRows: BigInt(numAffectedRows),
     };

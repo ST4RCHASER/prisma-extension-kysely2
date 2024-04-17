@@ -5,9 +5,6 @@ import {
   InsertResult,
   Kysely,
   KyselyPlugin,
-  SqliteAdapter,
-  SqliteIntrospector,
-  SqliteQueryCompiler,
   UpdateResult,
 } from "kysely";
 import { DB } from "../prisma/generated/types.js";
@@ -132,7 +129,7 @@ describe("prisma-extension-kysely", () => {
   it("should throw an error if a query is executed with a stream", async () => {
     const query = xprisma.$kysely.selectFrom("Model").selectAll();
     await expect(query.stream().next()).rejects.toThrow(
-      "prisma-extension-kysely does not support streaming queries",
+      "Prisma Dialect does not support streaming for now",
     );
   });
 
@@ -190,7 +187,14 @@ describe("prisma-extension-kysely", () => {
       expect.objectContaining({ node: query.compile().query }),
     );
     expect(plugin.transformResult).toHaveBeenCalledWith(
-      expect.objectContaining({ result: { rows } }),
+      expect.objectContaining({
+        queryId: {},
+        result: {
+          rows,
+          numAffectedRows: BigInt(0),
+          numUpdatedOrDeletedRows: BigInt(0),
+        },
+      }),
     );
   });
 });

@@ -37,7 +37,7 @@ const prismaKysely = <T>(extensionArgs?: KyselyConfigLike) =>
               ...(extensionArgs as KyselyConfig),
               dialect: new PrismaDialect(tx),
             });
-            tx.$kysely = () => kysely;
+            tx.$kysely = kysely as unknown as typeof tx.$kysely;
 
             return (fn as (typeof target.$transaction.arguments)[0])(tx);
           }, options);
