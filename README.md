@@ -69,19 +69,19 @@ const prisma = new PrismaClient().$extends(prismaKysely<DB>());
 // Custom dialect,plugins,options
 const prisma = new PrismaClient().$extends(
   prismaKysely({
-        dialect: {
-          // This is where the magic happens!
-          createDriver: () => driver,
-          // Don't forget to customize these to match your database!
-          createAdapter: () => new PostgresAdapter(),
-          createIntrospector: (db) => new PostgresIntrospector(db),
-          createQueryCompiler: () => new PostgresQueryCompiler(),
-        },
-        plugins: [
-          // Add your favorite plugins here!
-        ],
-  }
-));
+    dialect: {
+      // This is where the magic happens!
+      createDriver: () => driver,
+      // Don't forget to customize these to match your database!
+      createAdapter: () => new PostgresAdapter(),
+      createIntrospector: (db) => new PostgresIntrospector(db),
+      createQueryCompiler: () => new PostgresQueryCompiler(),
+    },
+    plugins: [
+      // Add your favorite plugins here!
+    ],
+  }),
+);
 ```
 
 It's that simple! Now you can write raw SQL queries with `kysely` and use them with Prisma:
@@ -108,6 +108,10 @@ await prisma.$kysely.deleteFrom("User").where("id", "=", id).execute();
 Prisma's interactive transactions are fully supported by `prisma-extension-kysely2`! Just remeber to use `tx.$kysely` instead of `prisma.$kysely`, and you're good to go:
 
 ```typescript
+await prisma.$kysely.transaction().execute(async (trx) => {});
+
+// Can use both
+
 await prisma.$transaction(async (tx) => {
   await tx.$kysely
     .insertInto("User")
@@ -119,13 +123,6 @@ await prisma.$transaction(async (tx) => {
     .values({ id: 2, name: "Jane Doe" })
     .execute();
 });
-```
-
-Don't try to use Kysely's `transaction` method directly, though. It's not supported by `prisma-extension-kysely2`, and it will throw an error if you try to use it.
-
-```typescript
-// Don't do this! Prefer prisma.$transaction instead.
-await prisma.$kysely.transaction().execute(async (trx) => {});
 ```
 
 ## Plugins
