@@ -17,19 +17,7 @@ import kyselyExtension from "../src/index.js";
 
 describe("prisma-extension-kysely", () => {
   const prisma = new PrismaClient();
-  const xprisma = prisma.$extends(
-    kyselyExtension({
-      kysely: (driver) =>
-        new Kysely<DB>({
-          dialect: {
-            createAdapter: () => new SqliteAdapter(),
-            createDriver: () => driver,
-            createIntrospector: (db) => new SqliteIntrospector(db),
-            createQueryCompiler: () => new SqliteQueryCompiler(),
-          },
-        }),
-    }),
-  );
+  const xprisma = prisma.$extends(kyselyExtension<DB>({}));
 
   const $queryRawUnsafeSpy = jest.spyOn(prisma, "$queryRawUnsafe");
   const $executeRawUnsafeSpy = jest.spyOn(prisma, "$executeRawUnsafe");
@@ -183,10 +171,8 @@ describe("prisma-extension-kysely", () => {
     ).resolves.toHaveLength(0);
   });
 
-  it("should forbid the use of kysely's built-in transactions", async () => {
-    await expect(
-      xprisma.$kysely.transaction().execute(async () => {}),
-    ).rejects.toThrow("prisma-extension-kysely does not support transactions");
+  it("should support transaction", async () => {
+    await xprisma.$kysely.transaction().execute(async () => {});
   });
 
   it("should support kysely plugins", async () => {

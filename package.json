@@ -1,20 +1,27 @@
 {
-  "name": "prisma-extension-kysely",
-  "version": "2.1.0",
-  "author": {
-    "name": "Eoin O'Brien",
-    "url": "https://eoin.ai",
-    "email": "eoin@tracworx.ai"
-  },
+  "name": "prisma-extension-kysely2",
+  "version": "2.1.0-forked",
+  "authors": [
+    {
+      "name": "Eoin O'Brien",
+      "url": "https://eoin.ai",
+      "email": "eoin@tracworx.ai"
+    },
+    {
+      "name": "ST4RCHASER",
+      "url": "https://starchaser.me",
+      "email": "sc@yue.sh"
+    }
+  ],
   "description": "Prisma extension for Kysely",
   "license": "MIT",
-  "homepage": "https://github.com/eoin-obrien/prisma-extension-kysely#readme",
+  "homepage": "https://github.com/ST4RCHASER/prisma-extension-kysely2#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/eoin-obrien/prisma-extension-kysely"
+    "url": "https://github.com/ST4RCHASER/prisma-extension-kysely2"
   },
   "bugs": {
-    "url": "https://github.com/eoin-obrien/prisma-extension-kysely/issues"
+    "url": "https://github.com/ST4RCHASER/prisma-extension-kysely2/issues"
   },
   "keywords": [
     "prisma",

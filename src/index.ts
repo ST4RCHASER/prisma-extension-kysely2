@@ -1,59 +1,51 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Prisma } from "@prisma/client";
-import { Kysely } from "kysely";
-import { PrismaDriver } from "./driver.js";
+import { Prisma } from "@prisma/client/extension";
+import { Dialect, Kysely, KyselyConfig, KyselyPlugin, LogConfig } from "kysely";
 
-/**
- * The configuration object for the Prisma Kysely extension
- */
-export type PrismaKyselyExtensionArgs<Database> = {
-  /**
-   * The Kysely instance to provide to the Prisma client
-   */
-  // kysely: Kysely<Database>;
-  kysely: (driver: PrismaDriver<any>) => Kysely<Database>;
-};
+import { PrismaDialect } from "./dialect";
 
-/**
- * Define a Prisma extension that adds Kysely query builder methods to the Prisma client
- * @param extensionArgs The extension configuration object
- */
-export default <Database>(extensionArgs: PrismaKyselyExtensionArgs<Database>) =>
+interface KyselyConfigLike {
+  dialect?: Dialect;
+  readonly plugins?: KyselyPlugin[];
+  readonly log?: LogConfig;
+}
+
+const prismaKysely = <T>(extensionArgs?: KyselyConfigLike) =>
   Prisma.defineExtension((client) => {
-    const driver = new PrismaDriver(client);
-    const kysely = extensionArgs.kysely(driver);
-
+    if (!extensionArgs?.dialect) {
+      if (!extensionArgs) {
+        extensionArgs = {} as KyselyConfig;
+      }
+      extensionArgs.dialect = new PrismaDialect(client);
+    }
+    const kyselyClient = new Kysely<T>(extensionArgs as KyselyConfig);
     const extendedClient = client.$extends({
-      name: "prisma-extension-kysely",
+      name: "prisma-kysely-extension",
       client: {
-        /**
-         * The Kysely instance used by the Prisma client
-         */
-        $kysely: kysely,
+        $kysely: kyselyClient,
       },
     });
 
-    // Wrap the $transaction method to attach a fresh Kysely instance to the transaction client
+    // [START] Taken from https://github.com/eoin-obrien/prisma-extension-kysely/blob/90fcdc989af307571a09652f6fedeb548ebd8d57/src/index.ts#L17
     const kyselyTransaction =
       (target: typeof extendedClient) =>
       (...args: Parameters<typeof target.$transaction>) => {
         if (typeof args[0] === "function") {
-          // If the first argument is a function, add a fresh Kysely instance to the transaction client
           const [fn, options] = args;
-          return target.$transaction(async (tx) => {
-            // The Kysely instance should call the transaction client, not the original client
-            const driver = new PrismaDriver(tx);
-            const kysely = extensionArgs.kysely(driver);
-            tx.$kysely = kysely;
-            return fn(tx);
+
+          return target.$transaction((tx) => {
+            const kysely = new Kysely<T>({
+              ...(extensionArgs as KyselyConfig),
+              dialect: new PrismaDialect(tx),
+            });
+            tx.$kysely = () => kysely;
+
+            return (fn as (typeof target.$transaction.arguments)[0])(tx);
           }, options);
         } else {
-          // Otherwise, just call the original $transaction method
           return target.$transaction(...args);
         }
       };
 
-    // Attach the wrapped $transaction method to the extended client using a proxy
     const extendedClientProxy = new Proxy(extendedClient, {
       get: (target, prop, receiver) => {
         if (prop === "$transaction") {
@@ -66,3 +58,6 @@ export default <Database>(extensionArgs: PrismaKyselyExtensionArgs<Database>) =>
 
     return extendedClientProxy;
   });
+// [END] Taken from https://github.com/eoin-obrien/prisma-extension-kysely/blob/90fcdc989af307571a09652f6fedeb548ebd8d57/src/index.ts#L17
+
+export default prismaKysely;

@@ -1,32 +1,45 @@
 import type { PrismaClient } from "@prisma/client/extension";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { DatabaseConnection, Driver, TransactionSettings } from "kysely";
-import { PrismaConnection } from "./connection.js";
+import { PrismaTransactionLocker } from "./locker";
+import { PrismaConnection } from "./connection";
 
 export class PrismaDriver<T extends PrismaClient> implements Driver {
-  constructor(private readonly prisma: T) {}
+  private readonly prisma;
 
-  async init(): Promise<void> {}
+  constructor(client: T) {
+    this.prisma = client;
+  }
+
+  async init(): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore Javascript don't know how to convert bigint to json,
+    // so we need to do it manually by convert it to string and convert it back to number
+    BigInt.prototype.toJSON = function () {
+      return isNaN(+this.toString()) ? this.toString() : +this.toString();
+    };
+  }
 
   async acquireConnection(): Promise<DatabaseConnection> {
     return new PrismaConnection(this.prisma);
   }
 
   async beginTransaction(
-    _connection: DatabaseConnection,
-    _settings: TransactionSettings,
+    conn: PrismaConnection,
+    settings: TransactionSettings,
   ): Promise<void> {
-    throw new Error("prisma-extension-kysely does not support transactions");
+    return conn.beginTransaction(settings);
   }
 
-  async commitTransaction(_connection: DatabaseConnection): Promise<void> {
-    throw new Error("prisma-extension-kysely does not support transactions");
+  async commitTransaction(conn: PrismaConnection): Promise<void> {
+    return conn.commitTransaction();
   }
 
-  async rollbackTransaction(_connection: DatabaseConnection): Promise<void> {
-    throw new Error("prisma-extension-kysely does not support transactions");
+  async rollbackTransaction(conn: PrismaConnection): Promise<void> {
+    return conn.rollbackTransaction();
   }
 
-  async releaseConnection(_connection: DatabaseConnection): Promise<void> {}
+  async releaseConnection(_conn: PrismaConnection): Promise<void> {}
 
   async destroy(): Promise<void> {}
 }

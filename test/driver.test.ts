@@ -23,22 +23,20 @@ describe("PrismaDriver", () => {
     expect(connection).toBeInstanceOf(PrismaConnection);
   });
 
-  it("should throw an error when beginning a transaction", async () => {
+  it("should throw an error when begin a transaction", async () => {
     const settings: TransactionSettings = {};
-    await expect(driver.beginTransaction(connection, settings)).rejects.toThrow(
-      "prisma-extension-kysely does not support transactions",
-    );
+    await driver.beginTransaction(connection, settings);
   });
 
-  it("should throw an error when committing a transaction", async () => {
+  it("should throw an error when commit a transaction", async () => {
     await expect(driver.commitTransaction(connection)).rejects.toThrow(
-      "prisma-extension-kysely does not support transactions",
+      "No transaction to commit",
     );
   });
 
-  it("should throw an error when rolling back a transaction", async () => {
+  it("should throw an error when rollback a transaction", async () => {
     await expect(driver.rollbackTransaction(connection)).rejects.toThrow(
-      "prisma-extension-kysely does not support transactions",
+      "No transaction to rollback",
     );
   });
 
