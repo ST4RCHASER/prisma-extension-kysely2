@@ -69,8 +69,6 @@ const prisma = new PrismaClient().$extends(prismaKysely<DB>());
 // Custom dialect,plugins,options
 const prisma = new PrismaClient().$extends(
   prismaKysely({
-    kysely: (driver) =>
-      new Kysely<DB>({
         dialect: {
           // This is where the magic happens!
           createDriver: () => driver,
@@ -82,9 +80,8 @@ const prisma = new PrismaClient().$extends(
         plugins: [
           // Add your favorite plugins here!
         ],
-      }),
-  }),
-);
+  }
+));
 ```
 
 It's that simple! Now you can write raw SQL queries with `kysely` and use them with Prisma:
